@@ -34,10 +34,6 @@ Class* load_class(const char* filename) {
     return class;
 }
 
-// Instruction parse_instruction(const char *instr) {
-//     switch ()
-// }
-
 void clean_class(Class *c) {
     free(c->methods[0].name);
     free(c->methods[0].bytecode);

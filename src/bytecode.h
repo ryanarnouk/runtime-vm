@@ -20,6 +20,6 @@ typedef struct {
     int operand;
 } Bytecode;
 
-void execute_bytecode(Bytecode* bytecode, int length);
+void execute_bytecode(VirtualMachine* vm, Bytecode* bytecode, int length);
 
 #endif

@@ -17,6 +17,5 @@ typedef struct {
 
 Class* load_class(const char* filename);
 void clean_class(Class* c);
-// Instruction parse_instruction(const char* instr);
 
 #endif

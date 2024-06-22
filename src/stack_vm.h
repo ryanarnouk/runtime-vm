@@ -12,13 +12,12 @@ typedef struct {
     int vars[MAX_VARS];
 } VirtualMachine;
 
-extern VirtualMachine vm;
-
 void* stack_alloc(size_t size);
 void stack_free(void* ptr);
-void vm_init();
-void vm_push(int value);
-int vm_pop();
-void stack_print();
+VirtualMachine* vm_init();
+void vm_push(VirtualMachine* vm, int value);
+int vm_pop(VirtualMachine* vm);
+void stack_print(VirtualMachine* vm);
+void vm_free(VirtualMachine* vm);
 
 #endif

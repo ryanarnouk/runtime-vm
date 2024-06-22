@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "arc.h"
 #include "bytecode.h"
 #include "class.h"
 #include "stack_vm.h"
@@ -10,12 +11,26 @@ int main() {
         return 1;
     }
 
-    vm_init();
+    VirtualMachine* vm = vm_init();
     Method* main_method = &class->methods[0];
     printf("Executing method: %s \n", main_method->name);
-    execute_bytecode(main_method->bytecode, main_method->bytecode_length);
+    execute_bytecode(vm, main_method->bytecode, main_method->bytecode_length);
+
+    ArcNode* list = NULL;
+    ArcNode* arc1 = arc_create(&list, 20);
+    ArcNode* arc2 = arc_create(&list, 10);
+
+    arc_retain(arc1);
+    arc_retain(arc2);
+    arc_release(&list, arc1);
+
+    arc_cleanup(&list);
+    if (list != NULL) {
+        fprintf(stderr, "Could not clean up the heap on program termination \n");
+    }
 
     clean_class(class);
+    vm_free(vm);
 
     return 0;
 }
