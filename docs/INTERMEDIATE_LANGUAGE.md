@@ -11,7 +11,7 @@ The development of this project began with the intermediate language before a hi
 3. Computer process executes the native code that the virtual machine calls
 
 ## Computational Model
-The byteocde representation of this language is stack-based (similar to the CIL from C#). There are no virtualized registers.
+The bytecode representation of this language is stack-based (similar to the CIL from C#). There are no virtualized registers.
 
 This differs from x86 assembly language one might be used to where registers are referenced in add instructions.
 In x86 assembly:
