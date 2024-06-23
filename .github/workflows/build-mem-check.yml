@@ -16,5 +16,5 @@ jobs:
       - name: Build
         run: make
 
-      - name: Memory Leak Check
-        run: valgrind ./bin/runtime --leak-check=FULL
+      - name: Memory Leak Check (on basic example class)
+        run: valgrind ./bin/runtime -b examples/basic/main.class --leak-check=FULL
