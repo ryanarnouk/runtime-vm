@@ -71,8 +71,10 @@ Class* load_class(const char* filename) {
 }
 
 void clean_class(Class *c) {
-    free(c->methods[0].name);
-    free(c->methods[0].bytecode);
+    for (int i = 0; i < c->method_count; i++) {
+        free(c->methods[i].name);
+        free(c->methods[i].bytecode);
+    }
     free(c->methods);
     free(c->class_name);
     free(c);
