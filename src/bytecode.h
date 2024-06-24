@@ -21,23 +21,23 @@
 // - `RETURN`: Returns from the method
 
 typedef enum {
-    LOAD_CONST, // load constant (onto stack)
-    STORE_VAR,  // store top of stack into variable
-    ADD,        // add top two values on the stack
-    SUB,        // subtract top two values on the stack
-    JE,         // jump if equal to zero
-    PRINT,       // print top of the stack
-    METHOD_BEGIN, // begin method definition
-    METHOD_END,   // end method definition
-    NEW,         // create a new object
-    DUP,         // duplicate top of stack
-    INVOKE_SPECIAL, // invoke a special method (e.g. constructor)
-    INVOKE_VIRTUAL, // invoke a virtual method
-    INVOKE_STATIC,  // invoke a static method
-    LOAD_VAR,       // load a variable onto the stack
-    SETFIELD,       // set the field of an object
-    GETFIELD,       // get the field of an object
-    RETURN          // return from the method
+    LOAD_CONST, // 0: load constant (onto stack)
+    STORE_VAR,  // 1: store top of stack into variable
+    ADD,        // 2: add top two values on the stack
+    SUB,        // 3: subtract top two values on the stack
+    JE,         // 4: jump if equal to zero
+    PRINT,       // 5: print top of the stack
+    METHOD_BEGIN, // 6: begin method definition
+    METHOD_END,   // 7: end method definition
+    NEW,         // 8: create a new object
+    DUP,         // 9: duplicate top of stack
+    INVOKE_SPECIAL, // 10: invoke a special method (e.g. constructor)
+    INVOKE_VIRTUAL, // 11: invoke a virtual method
+    INVOKE_STATIC,  // 12: invoke a static method
+    LOAD_VAR,       // 13: load a variable onto the stack
+    SETFIELD,       // 14: set the field of an object
+    GETFIELD,       // 15: get the field of an object
+    RETURN          // 16: return from the method
 } Instruction;
 
 typedef struct {
