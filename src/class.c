@@ -7,7 +7,7 @@
 // TODO: Maybe change this to return a hash map instead so we can easily reference "main" method
 // during execution and then jump to other methods as they are called during the execution
 // of the program (and implement returns)
-Method* load_methods(FILE* file, int* method_count) {
+Method* load_methods(FILE* file, int* method_count, HashMap* map) {
     int method_instruction;
     char name[256]; // Assuming method names won't exceed 255 characters
     Method* result = (Method *) malloc(sizeof(Method) * 100);
@@ -38,6 +38,8 @@ Method* load_methods(FILE* file, int* method_count) {
 
             result[number_of_methods] = *method;
             number_of_methods++;
+            // Insert the method into the map
+            insert(map, method->name, method);
             free(method); // Free the temporary method struct, since it's copied into result array
         } else {
             // Handle unexpected instruction by skipping to the next line
@@ -50,7 +52,7 @@ Method* load_methods(FILE* file, int* method_count) {
     return result;
 }
 
-Class* load_class(const char* filename) {
+Class* load_class(const char* filename, HashMap* map) {
     FILE* file = fopen(filename, "r");
 
     if (!file) {
@@ -62,7 +64,7 @@ Class* load_class(const char* filename) {
     class->class_name = strdup(filename);
 
     int method_count = 0;
-    class->methods = load_methods(file, &method_count);
+    class->methods = load_methods(file, &method_count, map);
     class->method_count = method_count;
 
     fclose(file);
@@ -90,6 +92,93 @@ void print_methods(Method *methods, int method_count) {
         for (int j = 0; j < method.bytecode_length; j++) {
             Bytecode bc = method.bytecode[j];
             printf("Instruction: %d Operand: %d\n", bc.instruction, bc.operand);
+        }
+    }
+}
+
+unsigned long hash_function(const char *str) {
+    unsigned long hash = 5381;
+    int c;
+    while ((c = *str++)) {
+        hash = ((hash << 5) + hash) + c;
+    }
+    return hash;
+}
+
+HashMap* create_map(size_t size) {
+    HashMap* map = (HashMap *) malloc(sizeof(HashMap));
+    if (!map) {
+        fprintf(stderr, "Failed to allocate memory for HashMap\n");
+        return NULL;
+    }
+
+    map->size = size;
+    map->buckets = calloc(size, sizeof(NameMethodPair *));
+    if (!map->buckets) {
+        free(map);
+        fprintf(stderr, "Failed to allocate memory for HashMap buckets\n");
+        return NULL;
+    }
+
+    return map;
+}
+
+void insert(HashMap* map, const char* name, Method* fn) {
+    unsigned long index = hash_function(name) % map->size;
+    NameMethodPair* pair = (NameMethodPair *) malloc(sizeof(NameMethodPair));
+    if (!pair) {
+        fprintf(stderr, "Failed to allocate memory for NameMethodPair\n");
+        return;
+    }
+    // function name maps to the new key (weird naming)
+    pair->name = strdup(name);
+    Method* method = (Method *) malloc(sizeof(Method));
+    // copy onto the heap
+    *method = *fn;
+    pair->method = method;
+    // set the next element to the current chain in the bucket
+    // NULL if there isn't any collisions
+    // Collisions would cause old elements to add after the newest on the chain
+    pair->next = map->buckets[index];
+    map->buckets[index] = pair;
+}
+
+int search(HashMap* map, const char* name, Method* fn) {
+    unsigned long index = hash_function(name) % map->size;
+    NameMethodPair* current = map->buckets[index];
+
+    while (current) {
+        if (strcmp(current->name, name) == 0) {
+            *fn = *(current->method);
+            // key found
+            return 1;
+        }
+        current = current->next;
+    }
+
+    return 0;
+}
+
+void clean_map(HashMap* map) {
+    for (size_t i = 0; i < map->size; ++i) {
+        NameMethodPair* current = map->buckets[i];
+        while (current) {
+            NameMethodPair* temp = current;
+            current = current->next;
+            free(temp->name);
+            free(temp);
+        }
+    }
+    free(map->buckets);
+    free(map);
+}
+
+void print_map(HashMap* map) {
+    for (size_t i = 0; i < map->size; i++) {
+        NameMethodPair* current = map->buckets[i];
+        while (current) {
+            printf("Key: %s\n", current->name);
+            current = current->next;
         }
     }
 }

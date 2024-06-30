@@ -3,6 +3,7 @@
 
 #define MAX_STACK_SIZE 100
 #define MAX_VARS 10
+#define MAX_METHODS 10
 
 #include <stddef.h>
 
