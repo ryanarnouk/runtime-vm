@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "Could not clean up the heap on program termination \n");
     }
 
+    clean_map(map);
     clean_class(class);
     vm_free(vm);
 
