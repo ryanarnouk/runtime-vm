@@ -115,6 +115,7 @@ HashMap* create_map(size_t size) {
     map->size = size;
     map->buckets = calloc(size, sizeof(NameMethodPair *));
     if (!map->buckets) {
+        free(map->buckets);
         free(map);
         fprintf(stderr, "Failed to allocate memory for HashMap buckets\n");
         return NULL;
