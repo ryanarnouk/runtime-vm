@@ -166,6 +166,7 @@ void clean_map(HashMap* map) {
             NameMethodPair* temp = current;
             current = current->next;
             free(temp->name);
+            free(temp->method);
             free(temp);
         }
     }
