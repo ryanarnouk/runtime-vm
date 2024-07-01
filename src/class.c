@@ -171,6 +171,7 @@ void clean_map(HashMap* map) {
             free(temp);
         }
     }
+    free(*(map->buckets));
     free(map->buckets);
     free(map);
 }
