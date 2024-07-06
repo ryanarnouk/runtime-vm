@@ -1,8 +1,8 @@
-# Stack/Virtual Machine
+# Virtual Machine
 
-## Computational Model
+This project is a stack-based virtual machine for a custom language runtime.
 
-The bytecode intermediate language representation is object-oriented and stack-based (similar to the CIL from C#). Instruction parameters and results are all stored on a single stack and not in any virtualized registers.
-
-## Stack
-TODO
+This virtual machine contains the following features:
+- an bytecode interpreter
+- atomic reference counting (in place as the primary form of memory management differing from traditional mark-and-sweep garbage collection in the JVM and C# Runtime)
+- a stack-based virtual machine
