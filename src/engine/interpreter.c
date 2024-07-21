@@ -1,7 +1,4 @@
-#include "bytecode.h"
-#include <complex.h>
-#include <stdio.h>
-#include "stack_vm.h"
+#include "interpreter.h"
 
 void execute_bytecode(VirtualMachine* vm, Bytecode *bytecode, int length) {
     int pc = 0; // program counter

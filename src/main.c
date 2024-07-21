@@ -4,6 +4,7 @@
 #include "bytecode.h"
 #include "class.h"
 #include "stack_vm.h"
+#include "engine/interpreter.h"
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {

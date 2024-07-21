@@ -45,6 +45,4 @@ typedef struct {
     int operand;
 } Bytecode;
 
-void execute_bytecode(VirtualMachine* vm, Bytecode* bytecode, int length);
-
 #endif
