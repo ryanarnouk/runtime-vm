@@ -1,7 +1,7 @@
 #ifndef FLAGS_h
 #define FLAGS_h
 
-#include <cinttypes>
+#include <stdint.h>
 
 #define ACC_PUBLIC (1 << 0)
 #define ACC_PRIVATE (2 << 0)

@@ -1,7 +1,6 @@
 #ifndef CLASS_H
 #define CLASS_H
 
-#include <cinttypes>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
