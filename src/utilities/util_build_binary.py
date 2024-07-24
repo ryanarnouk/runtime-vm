@@ -22,7 +22,7 @@ def hex_to_binary(input_file, output_file):
     # Read the hex data from the input file
     try:
         with open(input_file, "r", encoding="utf-8") as f:
-            hex_string = f.read().strip().replace(" ", "")
+            hex_string = f.read().strip().replace(" ", "").replace("\n", "")
     except FileNotFoundError:
         print(f"Error: Input file '{input_file}' not found")
         return

@@ -7,6 +7,11 @@
 #include "engine/interpreter.h"
 #include <unistd.h>
 
+// When set to 1, use the new code parser I am working on implementing
+// with a constant pool. 0 uses the pre-existing implementation
+// that already works as a basic interpreter with a few instructions.
+#define FEATURE_FLAG_NEW_PARSER 0
+
 int main(int argc, char *argv[]) {
     int opt;
     char* bytecode_file = NULL;
@@ -41,46 +46,51 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    // create map to store methods during program execution and bytecode reading
-    HashMap* map = create_map(MAX_METHODS);
+    if (FEATURE_FLAG_NEW_PARSER) {
+        // Feature flag is set - use the new parser
 
-    // Otherwise, we have a good file the runtime can work with.
-    Class* class = load_class(bytecode_file, map);
-    if (!class) {
-        fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
-        return 1;
+    } else {
+        // create map to store methods during program execution and bytecode reading
+        HashMap* map = create_map(MAX_METHODS);
+
+        // Otherwise, we have a good file the runtime can work with.
+        Class* class = load_class(bytecode_file, map);
+        if (!class) {
+            fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
+            return 1;
+        }
+
+        VirtualMachine* vm = vm_init();
+        Method* main_method = (Method *) malloc(sizeof(Method));
+
+        if(!search(map, "main", main_method)) {
+            fprintf(stderr, "Failed to find main method in class file: %s \n", bytecode_file);
+            return 1;
+        }
+
+        // main method is found (entry point to the program). Execute it.
+        printf("Executing method: %s \n", main_method->name);
+        execute_bytecode(vm, main_method->bytecode, main_method->bytecode_length);
+
+        // Example of ARC instead of garbage collection (to be added to the bytecode with OOP)
+        ArcNode* list = NULL;
+        ArcNode* arc1 = arc_create(&list, 20);
+        ArcNode* arc2 = arc_create(&list, 10);
+
+        arc_retain(arc1);
+        arc_retain(arc2);
+        arc_release(&list, arc1);
+
+        arc_cleanup(&list);
+        if (list != NULL) {
+            fprintf(stderr, "Could not clean up the heap on program termination \n");
+        }
+
+        free(main_method);
+        clean_map(map);
+        clean_class(class);
+        vm_free(vm);
     }
-
-    VirtualMachine* vm = vm_init();
-    Method* main_method = (Method *) malloc(sizeof(Method));
-
-    if(!search(map, "main", main_method)) {
-        fprintf(stderr, "Failed to find main method in class file: %s \n", bytecode_file);
-        return 1;
-    }
-
-    // main method is found (entry point to the program). Execute it.
-    printf("Executing method: %s \n", main_method->name);
-    execute_bytecode(vm, main_method->bytecode, main_method->bytecode_length);
-
-    // Example of ARC instead of garbage collection (to be added to the bytecode with OOP)
-    ArcNode* list = NULL;
-    ArcNode* arc1 = arc_create(&list, 20);
-    ArcNode* arc2 = arc_create(&list, 10);
-
-    arc_retain(arc1);
-    arc_retain(arc2);
-    arc_release(&list, arc1);
-
-    arc_cleanup(&list);
-    if (list != NULL) {
-        fprintf(stderr, "Could not clean up the heap on program termination \n");
-    }
-
-    free(main_method);
-    clean_map(map);
-    clean_class(class);
-    vm_free(vm);
 
     return 0;
 }

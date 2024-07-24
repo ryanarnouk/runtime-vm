@@ -3,11 +3,14 @@
 
 #include <stdint.h>
 
+// TODO: Modify the flags and potentially
+// reduce the number of bits. 16 is not necessary
+// for every possibility in the current implementation
 #define ACC_PUBLIC (1 << 0)
 #define ACC_PRIVATE (2 << 0)
-#define ACC_SUPER (1 << 2)
-#define ACC_FINAL (1 << 3)
-#define ACC_STATIC (1 << 4)
+#define ACC_SUPER (1 << 1)
+#define ACC_FINAL (1 << 2)
+#define ACC_STATIC (1 << 3)
 
 // Structure for a flag which is represented as a hex character with 4 hexits
 // Using bitwise operators, a combination of flags can be represented using the single integer
