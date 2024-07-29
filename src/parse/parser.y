@@ -44,11 +44,11 @@ identifier_list:
     }
     | identifier_list IDENTIFIER SEMICOLON
     {
-        Node* newNode = malloc(sizeof(Node));
-        newNode->type = IDENTIFIER_NODE;
-        newNode->data.identifier = $2;
-        newNode->data.class.body = $$; // Append to the existing list
-        $$ = newNode;
+        // Node* newNode = malloc(sizeof(Node));
+        // newNode->type = IDENTIFIER_NODE;
+        // newNode->data.identifier = $2;
+        // newNode->data.class.body = $$; // Append to the existing list
+        // $$ = newNode;
     }
     ;
 %%

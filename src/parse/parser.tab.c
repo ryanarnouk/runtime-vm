@@ -1345,11 +1345,11 @@ yyreduce:
   case 5:
 #line 46 "parser.y"
     {
-        Node* newNode = malloc(sizeof(Node));
-        newNode->type = IDENTIFIER_NODE;
-        newNode->data.identifier = (yyvsp[(2) - (3)].identifier);
-        newNode->data.class.body = (yyval.node); // Append to the existing list
-        (yyval.node) = newNode;
+        // Node* newNode = malloc(sizeof(Node));
+        // newNode->type = IDENTIFIER_NODE;
+        // newNode->data.identifier = $2;
+        // newNode->data.class.body = $$; // Append to the existing list
+        // $$ = newNode;
     ;}
     break;
 

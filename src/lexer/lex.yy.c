@@ -762,42 +762,38 @@ YY_RULE_SETUP
 {
     printf("Token: IDENTIFIER (%s)\n", yytext);
     yylval.identifier = strdup(yytext);
-    free(yytext);
     return IDENTIFIER;
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 18 "lexer.l"
+#line 17 "lexer.l"
 {
     printf("Token: INTEGER (%s)\n", yytext);
     yylval.integer = atoi(yytext);
-    free(yytext);
     return INTEGER;
 };
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 22 "lexer.l"
 /* ignore whitespace */;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 25 "lexer.l"
+#line 23 "lexer.l"
 {
-    char* return_text = strdup(yytext);
-    printf("Unknown character: %s\n", return_text);
-    free(yytext);
-    return return_text[0];
+    printf("Unknown character: %s\n", yytext);
+    return yytext[0];
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "lexer.l"
+#line 27 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 800 "lex.yy.c"
+#line 796 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1802,7 +1798,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 31 "lexer.l"
+#line 27 "lexer.l"
 
 
 int yywrap() {
