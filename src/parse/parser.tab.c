@@ -1328,10 +1328,10 @@ yyreduce:
         case 3:
 #line 32 "parser.y"
     {
-        (yyval.node) = malloc(sizeof(Node));
-        (yyval.node)->type = CLASS_NODE;
-        (yyval.node)->data.class.name = (yyvsp[(2) - (6)].identifier);
-        (yyval.node)->data.class.body = (yyvsp[(4) - (6)].node);
+        // $$ = malloc(sizeof(Node));
+        // $$->type = CLASS_NODE;
+        // $$->data.class.name = $2;
+        // $$->data.class.body = $4;
     ;}
     break;
 

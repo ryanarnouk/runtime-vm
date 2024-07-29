@@ -30,10 +30,10 @@ program:
 class_decl:
     CLASS IDENTIFIER LBRACE identifier_list RBRACE SEMICOLON
     {
-        $$ = malloc(sizeof(Node));
-        $$->type = CLASS_NODE;
-        $$->data.class.name = $2;
-        $$->data.class.body = $4;
+        // $$ = malloc(sizeof(Node));
+        // $$->type = CLASS_NODE;
+        // $$->data.class.name = $2;
+        // $$->data.class.body = $4;
     }
     ;
 
