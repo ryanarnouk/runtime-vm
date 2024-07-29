@@ -8,6 +8,7 @@ void yyerror(const char *s);
 int yylex(void);
 
 extern FILE *yyin;
+Node *root;
 %}
 
 %union {
@@ -24,16 +25,17 @@ extern FILE *yyin;
 
 %%
 program:
-    class_decl
+    class_decl { root = $1; }
     ;
 
 class_decl:
     CLASS IDENTIFIER LBRACE identifier_list RBRACE SEMICOLON
     {
-        // $$ = malloc(sizeof(Node));
-        // $$->type = CLASS_NODE;
-        // $$->data.class.name = $2;
-        // $$->data.class.body = $4;
+        $$ = malloc(sizeof(Node));
+        $$->type = CLASS_NODE;
+        $$->data.class.name = $2;
+        $$->data.class.body = $4;
+        $$->next = NULL;
     }
     ;
 
@@ -44,11 +46,12 @@ identifier_list:
     }
     | identifier_list IDENTIFIER SEMICOLON
     {
-        // Node* newNode = malloc(sizeof(Node));
-        // newNode->type = IDENTIFIER_NODE;
-        // newNode->data.identifier = $2;
-        // newNode->data.class.body = $$; // Append to the existing list
-        // $$ = newNode;
+        Node* newNode = malloc(sizeof(Node));
+        newNode->type = IDENTIFIER_NODE;
+        newNode->data.identifier = $2;
+        newNode->data.class.body = $$; // Append to the existing list
+        newNode->next = $1;
+        $$ = newNode;
     }
     ;
 %%

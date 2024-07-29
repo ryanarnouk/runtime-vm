@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "arc.h"
 #include "bytecode.h"
+#include "parse/traversal.h"
 #include "stack_vm.h"
 #include "engine/interpreter.h"
 #include <unistd.h>
@@ -15,10 +16,12 @@
 #if FEATURE_FLAG_NEW_PARSER == 1
 
 #include "./class/loader/loader.h"
+#include "./parse/common.h"
 // Forward declaration from parser.tab.h
 int yyparse();
 int yylex_destroy (void);
 extern FILE *yyin;
+Node *root;
 
 #endif
 
@@ -70,7 +73,10 @@ int main(int argc, char *argv[]) {
             }
             yyin = file;
         }
-        yyparse();
+        if (yyparse() == 0) {
+            traverseNode(root);
+        }
+        freeNode(root);
         yylex_destroy();
         fclose(file);
     } else {

@@ -11,6 +11,7 @@ typedef struct Node {
             struct Node *body;
         } class;
     } data;
+    struct Node *next;
 } Node;
 
 #endif

@@ -98,6 +98,7 @@ void yyerror(const char *s);
 int yylex(void);
 
 extern FILE *yyin;
+Node *root;
 
 
 /* Enabling traces.  */
@@ -120,14 +121,14 @@ extern FILE *yyin;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 13 "parser.y"
+#line 14 "parser.y"
 {
     char *identifier;
     int integer;
     struct Node *node;
 }
 /* Line 193 of yacc.c.  */
-#line 131 "parser.tab.c"
+#line 132 "parser.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -140,7 +141,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 144 "parser.tab.c"
+#line 145 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -423,7 +424,7 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    27,    27,    31,    42,    45
+       0,    28,    28,    32,    44,    47
 };
 #endif
 
@@ -1325,37 +1326,44 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 3:
-#line 32 "parser.y"
+        case 2:
+#line 28 "parser.y"
+    { root = (yyvsp[(1) - (1)].node); ;}
+    break;
+
+  case 3:
+#line 33 "parser.y"
     {
-        // $$ = malloc(sizeof(Node));
-        // $$->type = CLASS_NODE;
-        // $$->data.class.name = $2;
-        // $$->data.class.body = $4;
+        (yyval.node) = malloc(sizeof(Node));
+        (yyval.node)->type = CLASS_NODE;
+        (yyval.node)->data.class.name = (yyvsp[(2) - (6)].identifier);
+        (yyval.node)->data.class.body = (yyvsp[(4) - (6)].node);
+        (yyval.node)->next = NULL;
     ;}
     break;
 
   case 4:
-#line 42 "parser.y"
+#line 44 "parser.y"
     {
         (yyval.node) = NULL;
     ;}
     break;
 
   case 5:
-#line 46 "parser.y"
+#line 48 "parser.y"
     {
-        // Node* newNode = malloc(sizeof(Node));
-        // newNode->type = IDENTIFIER_NODE;
-        // newNode->data.identifier = $2;
-        // newNode->data.class.body = $$; // Append to the existing list
-        // $$ = newNode;
+        Node* newNode = malloc(sizeof(Node));
+        newNode->type = IDENTIFIER_NODE;
+        newNode->data.identifier = (yyvsp[(2) - (3)].identifier);
+        newNode->data.class.body = (yyval.node); // Append to the existing list
+        newNode->next = (yyvsp[(1) - (3)].node);
+        (yyval.node) = newNode;
     ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1359 "parser.tab.c"
+#line 1367 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1569,7 +1577,7 @@ yyreturn:
 }
 
 
-#line 54 "parser.y"
+#line 57 "parser.y"
 
 
 void yyerror(const char *s) {

@@ -761,7 +761,7 @@ YY_RULE_SETUP
 #line 12 "lexer.l"
 {
     printf("Token: IDENTIFIER (%s)\n", yytext);
-    // yylval.identifier = strdup(yytext);
+    yylval.identifier = strdup(yytext);
     return IDENTIFIER;
 }
 	YY_BREAK
@@ -770,7 +770,7 @@ YY_RULE_SETUP
 #line 17 "lexer.l"
 {
     printf("Token: INTEGER (%s)\n", yytext);
-    // yylval.integer = atoi(yytext);
+    yylval.integer = atoi(yytext);
     return INTEGER;
 };
 	YY_BREAK

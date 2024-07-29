@@ -22,10 +22,10 @@ typedef struct {
 // The linked list structure of the Arc garbage collector uses a
 // doubly linked list, which increases memory overhead and metadata
 // required per object on the heap. But, there is faster overall deletion
-typedef struct Node {
+typedef struct ArcNode {
     Arc* arc;
-    struct Node* next;
-    struct Node* prev;
+    struct ArcNode* next;
+    struct ArcNode* prev;
 } ArcNode;
 
 ArcNode* arc_create(ArcNode** list, size_t size);
