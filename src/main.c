@@ -21,7 +21,7 @@
 int yyparse();
 int yylex_destroy (void);
 extern FILE *yyin;
-Node *root;
+struct Node *root;
 
 #endif
 

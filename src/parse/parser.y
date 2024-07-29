@@ -8,7 +8,7 @@ void yyerror(const char *s);
 int yylex(void);
 
 extern FILE *yyin;
-Node *root;
+struct Node *root;
 %}
 
 %union {
