@@ -17,6 +17,7 @@
 #include "./class/loader/loader.h"
 // Forward declaration from parser.tab.h
 int yyparse();
+int yylex_destroy (void);
 extern FILE *yyin;
 
 #endif
@@ -58,9 +59,11 @@ int main(int argc, char *argv[]) {
 
     #if FEATURE_FLAG_NEW_PARSER == 1
     // Using the new parser
+    FILE *file = NULL;
+
     if (language_file != 0) {
         if (argc > 1) {
-            FILE *file = fopen(language_file, "r");
+            file = fopen(language_file, "r");
             if (!file) {
                 perror(argv[1]);
                 return 1;
@@ -68,6 +71,8 @@ int main(int argc, char *argv[]) {
             yyin = file;
         }
         yyparse();
+        yylex_destroy();
+        fclose(file);
     } else {
         fprintf(stderr, "Could not get a language file for the parser (feature flag to compile to bytecode is turned on)");
         return 1;
