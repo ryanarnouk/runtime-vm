@@ -5,6 +5,7 @@
 #include "stack_vm.h"
 #include "engine/interpreter.h"
 #include <unistd.h>
+#include "./parse/parser.tab.h"
 
 // When set to 1, use the new code parser I am working on implementing
 // with a constant pool. 0 uses the pre-existing implementation
@@ -14,6 +15,9 @@
 #if FEATURE_FLAG_NEW_PARSER == 1
 
 #include "./class/loader/loader.h"
+// Forward declaration from parser.tab.h
+int yyparse();
+extern FILE *yyin;
 
 #endif
 
@@ -47,24 +51,35 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    if (language_file != NULL) {
-        fprintf(stderr, "Language file not yet supported. Parsing/lexing has yet to be implemented for the more abstracted language representation. \n");
-        return 1;
-    }
-
     if (bytecode_file == NULL && language_file == NULL) {
         fprintf(stderr, "No language file specified. Please specify a bytecode or language file. \n");
         exit(EXIT_FAILURE);
     }
 
     #if FEATURE_FLAG_NEW_PARSER == 1
-    // Feature flag is set - use the new parser (from preprocessor if-statemnet)
-    ClassFile* class = load_class_file(bytecode_file);
-    if (!class) {
-        fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
+    // Using the new parser
+    if (language_file != 0) {
+        if (argc > 1) {
+            FILE *file = fopen(language_file, "r");
+            if (!file) {
+                perror(argv[1]);
+                return 1;
+            }
+            yyin = file;
+        }
+        yyparse();
+    } else {
+        fprintf(stderr, "Could not get a language file for the parser (feature flag to compile to bytecode is turned on)");
         return 1;
     }
-    free(class);
+
+    // Feature flag is set - use the new parser (from preprocessor if-statemnet)
+    // ClassFile* class = load_class_file(bytecode_file);
+    // if (!class) {
+    //     fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
+    //     return 1;
+    // }
+    // free(class);
     #endif
 
     #if FEATURE_FLAG_NEW_PARSER == 0

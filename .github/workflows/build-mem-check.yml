@@ -18,3 +18,6 @@ jobs:
 
       - name: Memory Leak Check (on basic example class)
         run: valgrind ./bin/runtime -b examples/basic/main.class --leak-check=FULL
+
+      - name: Parse/lex Memory Leak Check (new feature toggle)
+        run: valgrind ./bin/runtime -l examples/lang/test.rvm --leak-check=FULL

@@ -4,6 +4,7 @@
 #include "bytecode.h"
 #include <stdio.h>
 
+#if FEATURE_FLAG_NEW_PARSER == 0
 typedef struct {
     char* name;
     Bytecode* bytecode;
@@ -47,5 +48,7 @@ void insert(HashMap* map, const char* name, Method* fn);
 int search(HashMap* map, const char* name, Method* fn);
 void clean_map(HashMap* map);
 void print_map(HashMap* map);
+
+#endif
 
 #endif

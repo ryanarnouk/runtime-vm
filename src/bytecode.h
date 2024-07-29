@@ -40,9 +40,21 @@ typedef enum {
     RETURN          // 16: return from the method
 } Instruction;
 
+#if FEATURE_FLAG_NEW_PARSER == 0
+
 typedef struct {
     Instruction instruction;
     int operand;
 } Bytecode;
+
+#endif
+
+#if FEATURE_FLAG_NEW_PARSER == 1
+
+// a chunk of consecutive bytecode instructions for a method
+// based on new and updated instruction set
+// TODO
+
+#endif
 
 #endif

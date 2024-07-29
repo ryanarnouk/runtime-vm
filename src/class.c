@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include "bytecode.h"
 
+#if FEATURE_FLAG_NEW_PARSER == 0
+// 2024.07.27 - this code is now deprecated and will be later removed
+// This from before the new definition of the bytecode with the old feature toggle
+
 // TODO: Maybe change this to return a hash map instead so we can easily reference "main" method
 // during execution and then jump to other methods as they are called during the execution
 // of the program (and implement returns)
@@ -185,3 +189,5 @@ void print_map(HashMap* map) {
         }
     }
 }
+
+#endif

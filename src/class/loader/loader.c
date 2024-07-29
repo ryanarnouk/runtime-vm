@@ -31,19 +31,35 @@ ClassFile* load_class_file(const char* filename) {
         return 0;
     }
 
+    ClassFile *class = (ClassFile *) malloc(sizeof(ClassFile));
+
     // Process the data
-    for (long i = 0; i < file_size; i++) {
-        printf("%02X ", (unsigned char) buffer[i]);
-        if ((i + 1) % 16 == 0) {
-            printf("\n");
-        }
-    }
+    // long index = 0;
+    // class->minor_version = 0xffff && buffer[index];
+    // printf("%02X", (unsigned char) buffer[index]);
+    // index += sizeof(uint16_t);
+
+    // class->major_version = 0xffff && buffer[index];
+    // printf("%02X", (unsigned char) buffer[index]);
+    // printf("%02X", (unsigned char) buffer[index + 8]);
+    // index += sizeof(uint16_t);
+
+    // printf("Minor version: %d \n", class->minor_version);
+    // printf("Major version: %d \n", class->major_version);
+    // printf("Class name: %s \n", class->class_name->name->bytes);
+
+    // // for (long i = 0; i < file_size; i++) {
+    // //     printf("%02X ", (unsigned char) buffer[i]);
+    // //     if ((i + 1) % 16 == 0) {
+    // //         printf("\n");
+    // //     }
+    // // }
+
     printf("\n");
 
     // Clean up
     free(buffer);
     fclose(file);
 
-    ClassFile *class = (ClassFile *) malloc(sizeof(ClassFile));
     return class;
 }
