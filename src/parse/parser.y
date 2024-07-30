@@ -8,7 +8,7 @@ void yyerror(const char *s);
 int yylex(void);
 
 extern FILE *yyin;
-struct Node *root;
+Node *root = NULL;
 %}
 
 %union {
@@ -61,15 +61,3 @@ void yyerror(const char *s) {
     extern char *yytext;
     fprintf(stderr, "Error: %s at line %d near '%s'\n", s, yylineno, yytext);
 }
-
-// int main(int argc, char **argv) {
-//     if (argc > 1) {
-//         FILE *file = fopen(argv[1], "r");
-//         if (!file) {
-//             perror(argv[1]);
-//             return 1;
-//         }
-//         yyin = file;
-//     }
-//     return yyparse();
-// }

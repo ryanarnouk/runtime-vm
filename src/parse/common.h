@@ -14,4 +14,6 @@ typedef struct Node {
     struct Node *next;
 } Node;
 
+extern Node *root;
+
 #endif
