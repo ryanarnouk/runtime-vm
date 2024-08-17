@@ -42,20 +42,42 @@
      IDENTIFIER = 258,
      INTEGER = 259,
      CLASS = 260,
-     LBRACE = 261,
-     RBRACE = 262,
-     SEMICOLON = 263,
-     ASSIGN = 264
+     FUNCTION = 261,
+     RETURN = 262,
+     IF = 263,
+     ELSE = 264,
+     WHILE = 265,
+     LBRACE = 266,
+     RBRACE = 267,
+     LPAREN = 268,
+     RPAREN = 269,
+     COMMA = 270,
+     SEMICOLON = 271,
+     ASSIGN = 272,
+     CONSTRUCTOR = 273,
+     VAR = 274,
+     PRINT = 275
    };
 #endif
 /* Tokens.  */
 #define IDENTIFIER 258
 #define INTEGER 259
 #define CLASS 260
-#define LBRACE 261
-#define RBRACE 262
-#define SEMICOLON 263
-#define ASSIGN 264
+#define FUNCTION 261
+#define RETURN 262
+#define IF 263
+#define ELSE 264
+#define WHILE 265
+#define LBRACE 266
+#define RBRACE 267
+#define LPAREN 268
+#define RPAREN 269
+#define COMMA 270
+#define SEMICOLON 271
+#define ASSIGN 272
+#define CONSTRUCTOR 273
+#define VAR 274
+#define PRINT 275
 
 
 
@@ -66,10 +88,10 @@ typedef union YYSTYPE
 {
     char *identifier;
     int integer;
-    struct Node *node;
+    struct IRNode *node;
 }
 /* Line 1529 of yacc.c.  */
-#line 73 "parser.tab.h"
+#line 95 "parser.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

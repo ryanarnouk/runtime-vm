@@ -1,3 +1,9 @@
-class MyClass {
-    testVariable;
+class Test {
+    var test;
+    var hello;
+
+    init() {
+        test = 2;
+        print(test);
+    }
 };

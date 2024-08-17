@@ -1,22 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "arc.h"
+#include "builder/ir_builder.h"
 #include "bytecode.h"
 #include "parse/traversal.h"
 #include "stack_vm.h"
-#include "engine/interpreter.h"
+#include <string.h>
 #include <unistd.h>
-#include "./parse/parser.tab.h"
+#include "common_properties.h"
 
 // When set to 1, use the new code parser I am working on implementing
 // with a constant pool. 0 uses the pre-existing implementation
 // that already works as a basic interpreter with a few instructions.
-#define FEATURE_FLAG_NEW_PARSER 1
 
 #if FEATURE_FLAG_NEW_PARSER == 1
 
 #include "./class/loader/loader.h"
-#include "./parse/common.h"
+#include "./parse/parser.tab.h"
+
 // Forward declaration from parser.tab.h
 int yyparse();
 int yylex_destroy (void);
@@ -26,6 +27,7 @@ extern FILE *yyin;
 
 #if FEATURE_FLAG_NEW_PARSER == 0
 
+#include "engine/interpreter.h"
 #include "class.h"
 
 #endif
@@ -35,16 +37,23 @@ int main(int argc, char *argv[]) {
     char* bytecode_file = NULL;
     char* language_file = NULL;
 
-    if ((opt = getopt(argc, argv, "b:l:")) != -1) {
+    if ((opt = getopt(argc, argv, "b:l:v")) != -1) {
         switch (opt) {
             case 'b':
+                // Option for using the runtime through a bytecode file
                 bytecode_file = optarg;
                 break;
             case 'l':
+                // Option for compiling down to a bytecode file
                 language_file = optarg;
                 break;
+            case 'v':
+                // Print the version number
+                printf("RVMC Version: %d.%d\n", IL_MAJOR_VERSION, IL_MINOR_VERSION);
+                printf("This is the version of the runtime and compiled bytecode file  \n");
+                return 0;
             default:
-                fprintf(stderr, "Usage: %s [-b bytecode_file] [-l language_file]\n", argv[0]);
+                fprintf(stderr, "Usage: %s [-b bytecode_file] [-l language_file] [-v] \n", argv[0]);
                 return 1;
         }
     }
@@ -72,24 +81,69 @@ int main(int argc, char *argv[]) {
             }
             yyin = file;
         }
-        if (yyparse() == 0) {
-            traverseNode(root);
+
+
+        int length = strlen(language_file);
+        int index = length;
+        int dot_index = -1;
+
+        char* path_for_rvmc = NULL;
+        char* name;
+        while (index >=0) {
+            index--;
+            if (language_file[index] == '/') {
+                path_for_rvmc = (char *) malloc(index + 1);
+                name = (char*) malloc(length - index);
+
+                strncpy(path_for_rvmc, language_file, index);
+                path_for_rvmc[index] = '\0';
+
+                if (dot_index >= 0) {
+                    strncpy(name, &language_file[index + 1], dot_index - index - 1);
+                    name[dot_index - index - 1] = '\0';
+                } else {
+                    strcpy(name, &language_file[index + 1]);
+                }
+
+                break;
+            }
+
+            if (language_file[index] == '.' && dot_index == -1) {
+                dot_index = index;
+            }
+
+            // No '/' means the entire string is the file name
+            if (index < 0) {
+                path_for_rvmc = NULL;
+                if (dot_index >= 0) {
+                    name = (char *)malloc(dot_index + 1);
+                    strncpy(name, language_file, dot_index);
+                    name[dot_index] = '\0';
+                }
+            }
         }
-        freeNode(root);
+
+        if (yyparse() == 0) {
+            construct_class_file(root, NULL);
+            save_class_file(path_for_rvmc, name);
+        }
+        free_node(root);
         yylex_destroy();
         fclose(file);
+    } else if (bytecode_file != 0) {
+        // Feature flag is set - use the new parser (from preprocessor if-statemnet)
+        ClassFile* class = load_class_file(bytecode_file);
+        if (!class) {
+            fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
+            return 1;
+        }
+        free(class);
+        return 1;
     } else {
-        fprintf(stderr, "Could not get a language file for the parser (feature flag to compile to bytecode is turned on)");
+        fprintf(stderr, "No file specified");
         return 1;
     }
 
-    // Feature flag is set - use the new parser (from preprocessor if-statemnet)
-    // ClassFile* class = load_class_file(bytecode_file);
-    // if (!class) {
-    //     fprintf(stderr, "Failed to load class file: %s \n", bytecode_file);
-    //     return 1;
-    // }
-    // free(class);
     #endif
 
     #if FEATURE_FLAG_NEW_PARSER == 0
