@@ -13,7 +13,7 @@ This means that the project is not only a runtime/VM. It contains a "compilation
 
 
 ## Setup
-- A C compiler is required to compile the project. I use Clang on my machine. Note that the Makefile references `gcc`, but a symlink should exist to point to C lang instead.
+- A C compiler is required to compile the project. I use Clang on my machine. Note that the Makefile references `gcc`, but a symlink should exist to point to Clang instead.
 
 1. Clone project
 
