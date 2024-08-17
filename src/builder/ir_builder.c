@@ -62,7 +62,6 @@ int add_method_identifier(char *identifier) {
     name.length = strlen(identifier);
     entry.info.method_ref_info->class_name = name;
     emit_file->constant_pool_entries[emit_file->constant_pool_count] = entry;
-    printf("\n \n INC OCCUR mR \n \n ");
     return emit_file->constant_pool_count++;
 }
 
@@ -107,8 +106,6 @@ int add_constant_identifier(char *identifier) {
     entry.info.utf8_info->length = strlen(identifier);
     entry.info.utf8_info->bytes = identifier;
     emit_file->constant_pool_entries[emit_file->constant_pool_count] = entry;
-    printf("\n \n INC OCCUR \n \n ");
-
     return emit_file->constant_pool_count++;
 }
 
@@ -152,7 +149,6 @@ void save_class_file(char* path, char* name) {
     fwrite(&emit_file->flags->access_flags, sizeof(uint16_t), 1, file);
 
     fwrite(&emit_file->constant_pool_count, sizeof(uint16_t), 1, file);
-    printf("\n !!!Constant pool count: %d \n", emit_file->constant_pool_count);
     fwrite(&emit_file->constant_pool_capacity, sizeof(uint16_t), 1, file);
 
     // Write constant pool entries
@@ -285,7 +281,6 @@ void construct_class_file(IRNode *node, CodeAttribute* code_block) {
                 return;
             }
             add_constant_identifier(node->data.identifier);
-            print_constant_pool();
             break;
         case NODE_INTEGER:
             printf("Integer: %d \n", node->data.intval);

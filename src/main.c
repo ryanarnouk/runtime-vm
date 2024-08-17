@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "arc.h"
 #include "builder/ir_builder.h"
 #include "bytecode.h"
@@ -33,6 +34,8 @@ extern FILE *yyin;
 #endif
 
 int main(int argc, char *argv[]) {
+    clock_t start = clock();
+
     int opt;
     char* bytecode_file = NULL;
     char* language_file = NULL;
@@ -189,6 +192,11 @@ int main(int argc, char *argv[]) {
     clean_class(class);
     vm_free(vm);
     #endif
+
+    clock_t end = clock();
+
+    double elapsed = (double) (end - start) / CLOCKS_PER_SEC;
+    printf("Completed in: %.6f seconds\n", elapsed);
 
     return 0;
 }

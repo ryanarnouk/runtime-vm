@@ -7,7 +7,7 @@ This project is currently in development stages. But eventually, my hope is it t
 More concretely, my goal is to be able to do simple Leetcode problems using this runtime and language.
 
 ## Future Plans
-I am currently working on a rewrite of the original functionality, this time involving the implementation of my own language for the runtime. This has been developed with Flex and Bison, providing a lexer that tokenizes the input source code and a parser that converts tokens into an Abstract Syntax Tree (AST) which I am working to convert to gets converted into bytecode. 
+I am currently working on a rewrite of the original functionality, this time involving the implementation of my own language for the runtime. This has been developed with Flex and Bison, providing a lexer that tokenizes the input source code and a parser that converts tokens into an Abstract Syntax Tree (AST) which I am working to convert to gets converted into bytecode.
 
 This means that the project is not only a runtime/VM. It contains a "compilation" into this bytecode and a runtime for the bytecode (all under the runtime repo).
 
@@ -23,7 +23,7 @@ make
 ```
 
 3. Optional
-You can reference `./bin/runtime` to run the project (from within the repo directly). However, to add the symlink to your PATH environment variable and create the option to run `rvm` directly, execute the following after granting execute permissions: 
+You can reference `./bin/runtime` to run the project (from within the repo directly). However, to add the symlink to your PATH environment variable and create the option to run `rvm` directly, execute the following after granting execute permissions:
 
 ```
 ./env_setup.sh
@@ -53,7 +53,7 @@ rvm -b <path_to_rvmc_file>
 ```
 
 ### Version
-To view your current version of the runtime and the encoding/structure of the class files run: 
+To view your current version of the runtime and the encoding/structure of the class files run:
 
 ```
 rvm -v
@@ -61,4 +61,4 @@ rvm -v
 
 # Further
 
-While an unoriginal name, RVM serves a second purpose as a play on Research in Motion's acronym (RIM) - fitting since this project was also developed in Canada :) 
+While a not so creative name, RVM serves a second purpose as a play on Research in Motion's acronym (RIM) - fitting since this project was also developed in Canada :)
