@@ -16,4 +16,7 @@
 // for every resize operation that is needed for the program
 #define CONSTANT_POOL_INIT_SIZE 10
 
+// When flagged, more verbose printing will occur
+#define VERBOSE_MODE 1
+
 #endif

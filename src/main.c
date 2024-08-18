@@ -33,6 +33,51 @@ extern FILE *yyin;
 
 #endif
 
+void gen_save_location(char* language_file, char** directory, char **file_name) {
+    int length = strlen(language_file);
+    int index = length;
+    int dot_index = -1;
+
+    char* path_for_rvmc = NULL;
+    char* name;
+    while (index >=0) {
+        index--;
+        if (language_file[index] == '/') {
+            path_for_rvmc = (char *) malloc(index + 1);
+            name = (char*) malloc(length - index);
+
+            strncpy(path_for_rvmc, language_file, index);
+            path_for_rvmc[index] = '\0';
+
+            if (dot_index >= 0) {
+                strncpy(name, &language_file[index + 1], dot_index - index - 1);
+                name[dot_index - index - 1] = '\0';
+            } else {
+                strcpy(name, &language_file[index + 1]);
+            }
+
+            break;
+        }
+
+        if (language_file[index] == '.' && dot_index == -1) {
+            dot_index = index;
+        }
+
+        // No '/' means the entire string is the file name
+        if (index < 0) {
+            path_for_rvmc = NULL;
+            if (dot_index >= 0) {
+                name = (char *)malloc(dot_index + 1);
+                strncpy(name, language_file, dot_index);
+                name[dot_index] = '\0';
+            }
+        }
+    }
+
+    *directory = path_for_rvmc;
+    *file_name = name;
+}
+
 int main(int argc, char *argv[]) {
     clock_t start = clock();
 
@@ -51,7 +96,7 @@ int main(int argc, char *argv[]) {
                 language_file = optarg;
                 break;
             case 'v':
-                // Print the version number
+                // In this case, -v is used to display the version of the runtime
                 printf("RVMC Version: %d.%d\n", IL_MAJOR_VERSION, IL_MINOR_VERSION);
                 printf("This is the version of the runtime and compiled bytecode file  \n");
                 return 0;
@@ -85,50 +130,12 @@ int main(int argc, char *argv[]) {
             yyin = file;
         }
 
-
-        int length = strlen(language_file);
-        int index = length;
-        int dot_index = -1;
-
-        char* path_for_rvmc = NULL;
-        char* name;
-        while (index >=0) {
-            index--;
-            if (language_file[index] == '/') {
-                path_for_rvmc = (char *) malloc(index + 1);
-                name = (char*) malloc(length - index);
-
-                strncpy(path_for_rvmc, language_file, index);
-                path_for_rvmc[index] = '\0';
-
-                if (dot_index >= 0) {
-                    strncpy(name, &language_file[index + 1], dot_index - index - 1);
-                    name[dot_index - index - 1] = '\0';
-                } else {
-                    strcpy(name, &language_file[index + 1]);
-                }
-
-                break;
-            }
-
-            if (language_file[index] == '.' && dot_index == -1) {
-                dot_index = index;
-            }
-
-            // No '/' means the entire string is the file name
-            if (index < 0) {
-                path_for_rvmc = NULL;
-                if (dot_index >= 0) {
-                    name = (char *)malloc(dot_index + 1);
-                    strncpy(name, language_file, dot_index);
-                    name[dot_index] = '\0';
-                }
-            }
-        }
-
         if (yyparse() == 0) {
+            char *directory;
+            char *name;
+            gen_save_location(language_file, &directory, &name);
             construct_class_file(root, NULL);
-            save_class_file(path_for_rvmc, name);
+            save_class_file(directory, name);
         }
         free_node(root);
         yylex_destroy();
@@ -191,6 +198,7 @@ int main(int argc, char *argv[]) {
     clean_map(map);
     clean_class(class);
     vm_free(vm);
+
     #endif
 
     clock_t end = clock();

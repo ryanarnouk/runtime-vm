@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include "../class/generator/generator.h"
 
 void emit_il_identifier(const char* identfier) {
@@ -132,7 +133,7 @@ void save_class_file(char* path, char* name) {
         extension++;
     }
 
-    printf("Path: %s", path);
+    printf("Saved compiled RVMC file: %s \n", path);
 
     FILE *file = fopen(path, "wb");
     if (file == NULL) {
@@ -259,6 +260,15 @@ int get_constant_identifier(char *identifier) {
     return -1;
 }
 
+void verbose_print(const char* format, ...) {
+    #if VERBOSE_MODE == 1
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
+    #endif
+}
+
 // Add arg to reflect the code attribute to add the generated code to
 // will often be null (ex. for identfiers that are only going to be added to
 // the constant pool and not generate any specific IR)
@@ -276,24 +286,24 @@ void construct_class_file(IRNode *node, CodeAttribute* code_block) {
     switch (node->type) {
         case NODE_IDENTIFIER:
             // increment number of elements in CP and add string constant
-            printf("Identifier: %s \n", node->data.identifier);
+            verbose_print("Identifier: %s \n", node->data.identifier);
             if (!node->data.identifier || strlen(node->data.identifier) == 0) {
                 return;
             }
             add_constant_identifier(node->data.identifier);
             break;
         case NODE_INTEGER:
-            printf("Integer: %d \n", node->data.intval);
+            verbose_print("Integer: %d \n", node->data.intval);
             // entry->info.integer_info = malloc(sizeof(Integer));
             // entry->info.integer_info->bytes = node->data.intval;
             break;
         case NODE_CLASS:
-            printf("Class: %s \n", node->data.class_declaration.name);
+            verbose_print("Class: %s \n", node->data.class_declaration.name);
             emit_file = generate_class_file(node->data.class_declaration.name);
             construct_class_file(node->data.class_declaration.class_members, code_block);
             break;
         case NODE_CONSTRUCTOR:
-            printf("Constructor");
+            verbose_print("Constructor \n");
             CodeAttribute* constructor = (CodeAttribute *) malloc(sizeof(CodeAttribute));
             // constructor doesn't have an explicit name. Setting the index to 1
             constructor->attribute_name_index = 0;
@@ -305,7 +315,7 @@ void construct_class_file(IRNode *node, CodeAttribute* code_block) {
             construct_class_file(node->data.constructor_declaration.code_body, constructor);
             break;
         case NODE_FUNCTION_CALL:
-            printf("Function call (only print supported right now) \n");
+            verbose_print("Function call (only print supported right now) \n");
             // for now, only constructor code is supported (and added directly there)
             // and for now, only "print" function call is supported
             int cp_index = get_constant_identifier("print");
@@ -318,9 +328,9 @@ void construct_class_file(IRNode *node, CodeAttribute* code_block) {
             construct_class_file(node->data.method_call_declaration.args, code_block);
             break;
         case NODE_ASSIGN:
-            // printf("Assign %d to %s \n",
-            //     node->data.assignment.right->data.intval,
-            //     node->data.assignment.left->data.identifier);
+            verbose_print("Assign %d to %s \n",
+                node->data.assignment.right->data.intval,
+                node->data.assignment.left->data.identifier);
             construct_class_file(node->data.assignment.left, code_block);
             construct_class_file(node->data.assignment.right, code_block);
             break;
@@ -369,7 +379,7 @@ void free_node(IRNode *node) {
                 free_node(node->data.assignment.right);
                 break;
             case NODE_VAR_DECL:
-                printf("Variable declaration: %s \n", node->data.variable_declaration.name->data.identifier);
+                verbose_print("Variable declaration: %s \n", node->data.variable_declaration.name->data.identifier);
                 free_node(node->data.variable_declaration.name);
                 break;
             default:

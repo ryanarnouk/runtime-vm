@@ -1,5 +1,7 @@
 #include "interpreter.h"
 
+#if FEATURE_FLAG_NEW_PARSER == 0
+
 void execute_bytecode(VirtualMachine* vm, Bytecode *bytecode, int length) {
     int pc = 0; // program counter
 
@@ -36,3 +38,5 @@ void execute_bytecode(VirtualMachine* vm, Bytecode *bytecode, int length) {
         pc++;
     }
 }
+
+#endif
