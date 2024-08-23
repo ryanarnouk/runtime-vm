@@ -6,17 +6,52 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Extract version number
+      - name: Set up build tools
+        if: matrix.platform == 'windows-latest'
+        run: choco install make
+        shell: cmd
+
+      - name: Extract intermediate language version number
         id: get_version
         run: |
-          MAJOR_VERSION=$(grep '#define MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
-          MINOR_VERSION=$(grep '#define MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
           echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
           echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
+
+      - name: Build binary
+        run: make
+        shell: bash
+        env:
+          PLATFORM: ${{ matrix.platform }}
+
+      - name: Archive Binary
+        run: mkdir -p dist
+          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
+          zip -r "dist/rvm-${{ env.VERSION }}-windows.zip" ./bin/*
+          else
+          tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}.tar.gz" ./bin/*
+          fi
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          git fetch --tags
+          if git rev-parse v${{ env.VERSION }} >/dev/null 2>&1; then
+            echo "::set-output name=exists::true"
+            exit 0
+          else
+            echo "::set-output name=exists::false"
+          fi
 
       - name: Create Git tag
         run: |
@@ -31,6 +66,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ env.VERSION }}
           release_name: Release v${{ env.VERSION }}
+          files: |
+            dist/*
           body: |
             Release v${{ env.VERSION }}
             - Major version: ${{ env.MAJOR_VERSION }}
