@@ -52,10 +52,12 @@ jobs:
         run: |
           mkdir -p dist
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-            zip -r "dist/rvm-${{ env.VERSION }}-windows.zip" ./bin/*
+            zip -r "dist/rvm-${{ env.VERSION }}-windows-${{ matrix.arch }}.zip" ./bin/*
           else
-            tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}=${{ matrix.arch }}.tar.gz" ./bin/*
+            tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz" ./bin/*
           fi
+        env:
+          MSYSTEM: MINGW64
 
       - name: Create Git tag
         run: |
