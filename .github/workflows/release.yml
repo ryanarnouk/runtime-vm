@@ -1,0 +1,42 @@
+name: Versioned Release
+
+on:
+  push:
+    paths:
+      - "../../src/common_properties.h"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Extract version number
+        id: get_version
+        run: |
+          MAJOR_VERSION=$(grep '#define MAJOR_VERSION' ../../src/common_properties.h | awk '{print $3}')
+          MINOR_VERSION=$(grep '#define MINOR_VERSION' ../../src/common_properties.h | awk '{print $3}')
+          echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
+          echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
+
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a v${{ env.VERSION }} -m "Release v${{ env.VERSION }}"
+          git push origin v${{ env.VERSION }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: v${{ env.VERSION }}
+          release_name: Release v${{ env.VERSION }}
+          body: |
+            Release v${{ env.VERSION }}
+            - Major version: ${{ env.MAJOR_VERSION }}
+            - Minor version: ${{ env.MINOR_VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
