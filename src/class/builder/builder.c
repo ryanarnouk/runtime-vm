@@ -1,9 +1,12 @@
-#include "generator.h"
+#include "builder.h"
 #include "../../common_properties.h"
 #include <stdlib.h>
 
-// Boilerplate example of creating a new class file
-ClassFile *generate_class_file(char* name) {
+ClassFile *create_class_file(char* name) {
+    if (name == NULL) {
+        return NULL;
+    }
+
     ClassFile* class_file = malloc(sizeof(ClassFile));
     class_file->major_version = IL_MAJOR_VERSION;
     class_file->minor_version = IL_MINOR_VERSION;

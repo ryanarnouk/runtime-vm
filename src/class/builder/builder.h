@@ -3,6 +3,6 @@
 
 #include "../class.h"
 
-ClassFile *generate_class_file(char* name);
+ClassFile *create_class_file(char* name);
 
 #endif

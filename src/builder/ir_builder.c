@@ -7,15 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "../class/generator/generator.h"
-
-void emit_il_identifier(const char* identfier) {
-    // stub todo
-}
-
-void emit_il_integer(int intval) {
-    // stub todo
-}
+#include "../class/builder/builder.h"
 
 void write_string(FILE* file, const char* str, uint16_t length) {
     // Matches the UTF-8 structure from class.h
@@ -70,7 +62,7 @@ int add_method_identifier(char *identifier) {
 void import_std() {
     // Move this to be imported from the user
     // rather than the standard library automatically being imported
-    int cp_index = add_method_identifier("print");
+    add_method_identifier("print");
 
     CodeAttribute *code = malloc(sizeof(CodeAttribute));
     code->attribute_name_index = 1;
@@ -299,7 +291,7 @@ void construct_class_file(IRNode *node, CodeAttribute* code_block) {
             break;
         case NODE_CLASS:
             verbose_print("Class: %s \n", node->data.class_declaration.name);
-            emit_file = generate_class_file(node->data.class_declaration.name);
+            emit_file = create_class_file(node->data.class_declaration.name);
             construct_class_file(node->data.class_declaration.class_members, code_block);
             break;
         case NODE_CONSTRUCTOR:
@@ -379,7 +371,6 @@ void free_node(IRNode *node) {
                 free_node(node->data.assignment.right);
                 break;
             case NODE_VAR_DECL:
-                verbose_print("Variable declaration: %s \n", node->data.variable_declaration.name->data.identifier);
                 free_node(node->data.variable_declaration.name);
                 break;
             default:

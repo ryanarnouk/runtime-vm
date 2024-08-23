@@ -10,10 +10,17 @@ jobs:
       fail-fast: true
       matrix:
         platform: [ubuntu-latest, macos-latest, windows-latest]
+        arch: [x86_64, arm64]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Chocolatey Action
+        if: matrix.platform == 'windows-latest'
+        uses: crazy-max/ghaction-chocolatey@v3.0.0
+        with:
+          args: install make
 
       - name: Set up build tools
         if: matrix.platform == 'windows-latest'

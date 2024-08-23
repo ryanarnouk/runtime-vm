@@ -19,14 +19,14 @@
 #define CONSTANT_EXCEPTION 13
 #define CONSTANT_UTF8 1
 
-// TODO: Add Exception Table after Virtual Method Table is implemented
+// TODO: Need to complete the exception table entry
 // Structure to represent the exception table entry
-// typedef struct {
-//     uint16_t start_pc;
-//     uint16_t end_pc;
-//     uint16_t handler_pc;
-//     uint16_t catch_type;
-// } ExceptionTableEntry;
+typedef struct {
+    uint16_t start_pc;
+    uint16_t end_pc;
+    uint16_t handler_pc;
+    uint16_t catch_type;
+} ExceptionTableEntry;
 
 // Structure to represent the code attribute
 typedef struct {
@@ -34,10 +34,9 @@ typedef struct {
     uint16_t attribute_length; // TODO: Implement this if more attributes are required for the code attribute (especially for debugging purposes)
     uint16_t max_stack;
     uint16_t max_locals;
-    // uint32_t code_length; - removed in favour of linked list and no need to keep track of length
     Bytecode *code;
-    //uint16_t exception_table_length;
-    //ExceptionTableEntry* exception_table;
+    uint16_t exception_table_length;
+    ExceptionTableEntry* exception_table;
 } CodeAttribute;
 
 typedef struct {
