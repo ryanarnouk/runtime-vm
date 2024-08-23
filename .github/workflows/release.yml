@@ -1,17 +1,14 @@
 name: Versioned Release
 
-on:
-  push:
-    paths:
-      - "../../src/common_properties.h"
+on: [push, pull_request]
 
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Extract version number
         id: get_version
