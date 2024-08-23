@@ -42,11 +42,12 @@ jobs:
           PLATFORM: ${{ matrix.platform }}
 
       - name: Archive Binary
-        run: mkdir -p dist
+        run: |
+          mkdir -p dist
           if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-          zip -r "dist/rvm-${{ env.VERSION }}-windows.zip" ./bin/*
+            zip -r "dist/rvm-${{ env.VERSION }}-windows.zip" ./bin/*
           else
-          tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}.tar.gz" ./bin/*
+            tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}.tar.gz" ./bin/*
           fi
 
       - name: Check if tag already exists
