@@ -16,16 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Chocolatey Action
+      - name: Setup MSYS2
         if: matrix.platform == 'windows-latest'
-        uses: crazy-max/ghaction-chocolatey@v3.0.0
+        uses: msys2/setup-msys2@v2
         with:
-          args: install make
-
-      - name: Set up build tools
-        if: matrix.platform == 'windows-latest'
-        run: choco install make
-        shell: cmd
+          install: mingw-w64-x86_64-toolchain make
+          update: true
 
       - name: Extract intermediate language version number
         id: get_version
