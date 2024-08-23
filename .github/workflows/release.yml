@@ -13,8 +13,8 @@ jobs:
       - name: Extract version number
         id: get_version
         run: |
-          MAJOR_VERSION=$(grep '#define MAJOR_VERSION' ../../src/common_properties.h | awk '{print $3}')
-          MINOR_VERSION=$(grep '#define MINOR_VERSION' ../../src/common_properties.h | awk '{print $3}')
+          MAJOR_VERSION=$(grep '#define MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MINOR_VERSION=$(grep '#define MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
           echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
           echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
 
