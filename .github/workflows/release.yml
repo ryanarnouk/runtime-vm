@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup MSYS2
         if: matrix.platform == 'windows-latest'
@@ -27,10 +27,13 @@ jobs:
         if: matrix.platform == 'windows-latest'
         shell: pwsh
         run: |
-          $MAJOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MAJOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
-          $MINOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MINOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
-          echo (VERSION = "$MAJOR_VERSION.$MINOR_VERSION") >> $env:GITHUB_ENV
-          Write-Host "Version: $env:VERSION"
+          # Get the major and minor versions from the header file
+          $majorVersion=Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MAJOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
+          $minorVersion=Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MINOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
+          # Set the environment variable
+          echo "VERSION=$majorVersion.$minorVersion" >> $env:GITHUB_ENV
+          # Output the version
+          Write-Host "Version: $majorVersion.$minorVersion"
 
       - name: Extract intermediate language version number (Unix)
         id: get_version
@@ -70,11 +73,11 @@ jobs:
           git push origin v${{ env.VERSION }} || true
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: v${{ env.VERSION }}
-          release_name: Release v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
           files: |
             dist/*
           body: |
