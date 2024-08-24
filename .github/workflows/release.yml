@@ -3,6 +3,23 @@ name: Versioned Release
 on: [push, pull_request]
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract intermediate language version number
+        id: get_version
+        if: matrix.platform != 'windows-latest'
+        shell: bash
+        run: |
+          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
+          echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
+
   release:
     runs-on: ${{ matrix.platform }}
 
@@ -22,25 +39,6 @@ jobs:
         with:
           install: mingw-w64-x86_64-toolchain make
           update: true
-
-      - name: Extract intermediate language version number (Windows)
-        if: matrix.platform == 'windows-latest'
-        shell: pwsh
-        run: |
-          $MAJOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MAJOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
-          $MINOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MINOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
-          echo ($VERSION = "$MAJOR_VERSION.$MINOR_VERSION") >> $env:GITHUB_ENV
-          Write-Host "Version: $env:VERSION"
-
-      - name: Extract intermediate language version number (Unix)
-        id: get_version
-        if: matrix.platform != 'windows-latest'
-        shell: bash
-        run: |
-          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
-          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
-          echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
-          echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
 
       - name: Build binary
         run: make
