@@ -37,8 +37,8 @@ jobs:
         if: matrix.platform != 'windows-latest'
         shell: bash
         run: |
-          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}') >> $GITHUB_ENV
-          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}') >> $GITHUB_ENV
+          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
           echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
           echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
 
@@ -79,7 +79,6 @@ jobs:
             dist/*
           body: |
             Release v${{ env.VERSION }}
-            - Major version: ${{ env.MAJOR_VERSION }}
-            - Minor version: ${{ env.MINOR_VERSION }}
+            Draft RVM release. May contain bugs and undefined behaviour given the current state of the project.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
