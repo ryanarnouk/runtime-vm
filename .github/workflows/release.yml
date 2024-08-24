@@ -29,7 +29,7 @@ jobs:
         run: |
           $MAJOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MAJOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
           $MINOR_VERSION = Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MINOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
-          echo (VERSION = "$MAJOR_VERSION.$MINOR_VERSION") >> $env:GITHUB_ENV
+          echo ($VERSION = "$MAJOR_VERSION.$MINOR_VERSION") >> $env:GITHUB_ENV
           Write-Host "Version: $env:VERSION"
 
       - name: Extract intermediate language version number (Unix)
