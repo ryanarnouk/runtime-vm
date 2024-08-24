@@ -31,7 +31,7 @@ jobs:
           $majorVersion=Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MAJOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
           $minorVersion=Get-Content -Path ./src/common_properties.h | Select-String -Pattern '#define IL_MINOR_VERSION' | ForEach-Object { $_ -split ' ' } | Select-Object -Index 2
           # Set the environment variable
-          Write-Host "VERSION=$majorVersion.$minorVersion" >> $env:GITHUB_ENV
+          echo "VERSION=$majorVersion.$minorVersion" >> $env:GITHUB_ENV
           # Output the version
           Write-Host "Version: $majorVersion.$minorVersion"
 
