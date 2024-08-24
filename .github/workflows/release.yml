@@ -37,8 +37,8 @@ jobs:
         if: matrix.platform != 'windows-latest'
         shell: bash
         run: |
-          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}')
-          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}')
+          MAJOR_VERSION=$(grep '#define IL_MAJOR_VERSION' ./src/common_properties.h | awk '{print $3}') >> $GITHUB_ENV
+          MINOR_VERSION=$(grep '#define IL_MINOR_VERSION' ./src/common_properties.h | awk '{print $3}') >> $GITHUB_ENV
           echo "VERSION=$MAJOR_VERSION.$MINOR_VERSION" >> $GITHUB_ENV
           echo "Version: $MAJOR_VERSION.$MINOR_VERSION"
 
@@ -48,16 +48,19 @@ jobs:
         env:
           PLATFORM: ${{ matrix.platform }}
 
-      - name: Archive Binary
+      - name: Archive Binary (Windows)
+        if: matrix.platform == 'windows-latest'
+        shell: pwsh
         run: |
           mkdir -p dist
-          if [ "${{ matrix.platform }}" == "windows-latest" ]; then
-            zip -r "dist/rvm-${{ env.VERSION }}-windows-${{ matrix.arch }}.zip" ./bin/*
-          else
-            tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz" ./bin/*
-          fi
-        env:
-          MSYSTEM: MINGW64
+          Compress-Archive -Path ./bin/* -DestinationPath "dist/rvm-${{ env.VERSION }}-windows-${{ matrix.arch }}.zip"
+
+      - name: Archive Binary (Unix)
+        if: matrix.platform != 'windows-latest'
+        shell: bash
+        run: |
+          mkdir -p dist
+          tar -czvf "dist/rvm-${{ env.VERSION }}-${{ matrix.platform }}-${{ matrix.arch }}.tar.gz" ./bin/*
 
       - name: Create Git tag
         run: |
