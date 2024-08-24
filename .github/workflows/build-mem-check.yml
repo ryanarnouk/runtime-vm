@@ -16,8 +16,8 @@ jobs:
       - name: Build
         run: make
 
-      #      - name: Memory Leak Check (on basic example class)
-      #        run: valgrind ./bin/runtime -b examples/basic/main.class --leak-check=FULL
+      - name: Language file to RVMC (new feature toggle)
+        run: valgrind ./bin/runtime -l examples/lang/test.rvm --track-origin=yes --leak-check=FULL --error-exitcode=1
 
-      # - name: Parse/lex Memory Leak Check (new feature toggle)
-      #   run: valgrind ./bin/runtime -l examples/lang/test.rvm --leak-check=FULL
+      - name: Interpretation of binary (RVMC) file
+        run: valgrind ./bin/runtime -b examples/lang/test.rvmc --track-origin=yes --leak-check=FULL --error-exitcode=1
