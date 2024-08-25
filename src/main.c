@@ -134,8 +134,8 @@ int main(int argc, char *argv[]) {
             char *directory;
             char *name;
             gen_save_location(language_file, &directory, &name);
-            construct_class_file(root, NULL);
-            save_class_file(directory, name);
+            // construct_class_file(root, NULL);
+            // save_class_file(directory, name);
         }
         free_node(root);
         yylex_destroy();
