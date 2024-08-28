@@ -130,6 +130,7 @@ int main(int argc, char *argv[]) {
             yyin = file;
         }
 
+        root = malloc(sizeof(IRNode));
         if (yyparse() == 0) {
             // char *directory;
             // char *name;
