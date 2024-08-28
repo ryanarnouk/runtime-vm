@@ -130,13 +130,13 @@ int main(int argc, char *argv[]) {
             yyin = file;
         }
 
-        // if (yyparse() == 0) {
-        //     char *directory;
-        //     char *name;
-        //     gen_save_location(language_file, &directory, &name);
-        //     // construct_class_file(root, NULL);
-        //     // save_class_file(directory, name);
-        // }
+        if (yyparse() == 0) {
+            // char *directory;
+            // char *name;
+            // gen_save_location(language_file, &directory, &name);
+            // construct_class_file(root, NULL);
+            // save_class_file(directory, name);
+        }
         free_node(root);
         yylex_destroy();
         fclose(file);
