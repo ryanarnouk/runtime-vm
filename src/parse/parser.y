@@ -33,7 +33,6 @@ program:
 class_declaration:
     CLASS IDENTIFIER LBRACE class_body RBRACE SEMICOLON
     {
-        printf("THis is running first");
         $$ = create_class_node($2, $4);
     }
     ;

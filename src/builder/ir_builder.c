@@ -342,7 +342,8 @@ void free_node(IRNode *node) {
         return;
     }
 
-    IRNode *current= node;
+    IRNode *current = malloc(sizeof(IRNode));
+    current = node;
 
     while (current) {
         IRNode *next = current->next;

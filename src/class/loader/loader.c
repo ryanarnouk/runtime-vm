@@ -60,7 +60,7 @@ ClassFile* load_class_file(const char* filename) {
                 class->constant_pool_entries[i].info.method_ref_info = (MethodRef *) malloc(sizeof(MethodRef));
                 fread(&class->constant_pool_entries[i].info.method_ref_info->class_name.length, sizeof(uint16_t), 1, file);
                 fread(&class->constant_pool_entries[i].info.method_ref_info->class_name.bytes,
-                    sizeof(char),
+                    sizeof(char) * class->constant_pool_entries[i].info.method_ref_info->class_name.length,
                     class->constant_pool_entries[i].info.method_ref_info->class_name.length,
                     file);
                 break;
@@ -68,7 +68,7 @@ ClassFile* load_class_file(const char* filename) {
                 class->constant_pool_entries[i].info.utf8_info = (Utf8 *) malloc(sizeof(Utf8));
                 fread(&class->constant_pool_entries[i].info.utf8_info->length, sizeof(uint16_t), 1, file);
                 fread(&class->constant_pool_entries[i].info.utf8_info->bytes,
-                    sizeof(char),
+                    sizeof(char) * class->constant_pool_entries[i].info.method_ref_info->class_name.length,
                     class->constant_pool_entries[i].info.utf8_info->length,
                     file);
                 break;
