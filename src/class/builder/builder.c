@@ -12,8 +12,9 @@ ClassFile *create_class_file(char* name) {
     class_file->minor_version = IL_MINOR_VERSION;
 
     class_file->class_name = malloc(sizeof(Utf8));
-    class_file->class_name->bytes = name;
     class_file->class_name->length = strlen(name);
+    class_file->class_name->bytes = malloc(sizeof(char) * class_file->class_name->length);
+    strncpy(name, class_file->class_name->bytes, class_file->class_name->length);
 
     // Stub - Implement flags later
     class_file->flags = (Flags *) malloc(sizeof(Flags));
