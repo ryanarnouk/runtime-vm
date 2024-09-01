@@ -455,9 +455,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    31,    31,    34,    40,    43,    44,    50,    51,    54,
-      59,    65,    77,    78,    84,    88,    92,    96,    97,   106,
-     113
+       0,    31,    31,    34,    41,    44,    45,    51,    52,    55,
+      60,    66,    78,    79,    85,    89,    93,    97,    98,   107,
+     114
 };
 #endif
 
@@ -1398,39 +1398,40 @@ yyreduce:
   case 3:
 #line 35 "parser.y"
     {
+        printf("THis is running first");
         (yyval.node) = create_class_node((yyvsp[(2) - (6)].identifier), (yyvsp[(4) - (6)].node));
     ;}
     break;
 
   case 4:
-#line 40 "parser.y"
+#line 41 "parser.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
   case 5:
-#line 43 "parser.y"
+#line 44 "parser.y"
     { (yyval.node) = NULL ;}
     break;
 
   case 6:
-#line 45 "parser.y"
+#line 46 "parser.y"
     {
-        (yyval.node) = append_node((yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node));
+        // $$ = append_node($1, $2);
     ;}
     break;
 
   case 7:
-#line 50 "parser.y"
-    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
-    break;
-
-  case 8:
 #line 51 "parser.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
     break;
 
+  case 8:
+#line 52 "parser.y"
+    { (yyval.node) = (yyvsp[(1) - (1)].node); ;}
+    break;
+
   case 9:
-#line 55 "parser.y"
+#line 56 "parser.y"
     {
         IRNode *node = create_identifier_node((yyvsp[(2) - (3)].identifier));
         (yyval.node) = create_var_decl_node(node);
@@ -1438,7 +1439,7 @@ yyreduce:
     break;
 
   case 10:
-#line 59 "parser.y"
+#line 60 "parser.y"
     {
         // does not support arguments yet
         // stub
@@ -1446,53 +1447,53 @@ yyreduce:
     break;
 
   case 11:
-#line 66 "parser.y"
+#line 67 "parser.y"
     {
         (yyval.node) = create_constructor_node(NULL, (yyvsp[(5) - (6)].node));
     ;}
     break;
 
   case 12:
-#line 77 "parser.y"
+#line 78 "parser.y"
     { (yyval.node) = NULL ;}
     break;
 
   case 13:
-#line 78 "parser.y"
+#line 79 "parser.y"
     {
         // A code block is a collection of statements
-        (yyval.node) = append_node((yyvsp[(1) - (2)].node), (yyvsp[(2) - (2)].node));
+        // $$ = append_node($1, $2);
     ;}
     break;
 
   case 14:
-#line 85 "parser.y"
+#line 86 "parser.y"
     {
         // stub
     ;}
     break;
 
   case 15:
-#line 89 "parser.y"
+#line 90 "parser.y"
     {
         // stub
     ;}
     break;
 
   case 16:
-#line 93 "parser.y"
+#line 94 "parser.y"
     {
         // stub
     ;}
     break;
 
   case 17:
-#line 96 "parser.y"
+#line 97 "parser.y"
     { (yyval.node) = (yyvsp[(1) - (1)].node) ;}
     break;
 
   case 18:
-#line 98 "parser.y"
+#line 99 "parser.y"
     {
         // TODO: add direct string support in the future
         // add support for any identifier for the first token, not just "print"
@@ -1502,7 +1503,7 @@ yyreduce:
     break;
 
   case 19:
-#line 107 "parser.y"
+#line 108 "parser.y"
     {
         IRNode *left = create_identifier_node((yyvsp[(1) - (4)].identifier));
         IRNode *right = create_integer_node((yyvsp[(3) - (4)].integer));
@@ -1511,7 +1512,7 @@ yyreduce:
     break;
 
   case 20:
-#line 114 "parser.y"
+#line 115 "parser.y"
     {
         // stub
     ;}
@@ -1519,7 +1520,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1523 "parser.tab.c"
+#line 1524 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1733,7 +1734,7 @@ yyreturn:
 }
 
 
-#line 129 "parser.y"
+#line 130 "parser.y"
 
 
 void yyerror(const char *s) {

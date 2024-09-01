@@ -33,6 +33,7 @@ program:
 class_declaration:
     CLASS IDENTIFIER LBRACE class_body RBRACE SEMICOLON
     {
+        printf("THis is running first");
         $$ = create_class_node($2, $4);
     }
     ;
@@ -43,7 +44,7 @@ class_member_list:
     /* Empty */ { $$ = NULL }
     | class_member_list class_member
     {
-        $$ = append_node($1, $2);
+        // $$ = append_node($1, $2);
     }
     ;
 class_member:
@@ -77,7 +78,7 @@ code_block:
     /* Empty */ { $$ = NULL }
     | code_block statement {
         // A code block is a collection of statements
-        $$ = append_node($1, $2);
+        // $$ = append_node($1, $2);
     }
     ;
 statement:
